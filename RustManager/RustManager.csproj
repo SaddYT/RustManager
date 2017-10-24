@@ -203,6 +203,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "S:\Libraries\Documents\Visual Studio 2017\Projects\RustManager\RustManager\bin\Debug\RustManager.exe" "S:\Libraries\Desktop\RustManager.exe"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
