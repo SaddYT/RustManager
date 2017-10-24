@@ -4,14 +4,13 @@ namespace RustManager.General
 {
     class TabManager
     {
-        private TabPage defaultPage;
+        private TabPage _defaultPage;
         public Label sayLabel = new Label();
         public Label commandLabel = new Label();
         public TextBox outputBox = new TextBox();
         public TextBox sayBox = new TextBox();
         public TextBox commandBox = new TextBox();
 
-        static private TabManager _instance;
         public static TabManager Instance
         {
             get
@@ -24,25 +23,25 @@ namespace RustManager.General
         {
             get
             {
-                return defaultPage ?? GenerateDefaultPage();
+                return _defaultPage ?? GenerateDefaultPage();
             }
         }
 
         TabPage GenerateDefaultPage()
         {
-            defaultPage = new TabPage();
-            defaultPage.Controls.Add(sayLabel);
-            defaultPage.Controls.Add(commandLabel);
-            defaultPage.Controls.Add(outputBox);
-            defaultPage.Controls.Add(sayBox);
-            defaultPage.Controls.Add(commandBox);
-            defaultPage.Location = new System.Drawing.Point(4, 22);
-            defaultPage.Name = "tabPage1";
-            defaultPage.Padding = new Padding(3);
-            defaultPage.Size = new System.Drawing.Size(508, 369);
-            defaultPage.TabIndex = 0;
-            defaultPage.Text = "No Connection";
-            defaultPage.UseVisualStyleBackColor = true;
+            _defaultPage = new TabPage();
+            _defaultPage.Controls.Add(sayLabel);
+            _defaultPage.Controls.Add(commandLabel);
+            _defaultPage.Controls.Add(outputBox);
+            _defaultPage.Controls.Add(sayBox);
+            _defaultPage.Controls.Add(commandBox);
+            _defaultPage.Location = new System.Drawing.Point(4, 22);
+            _defaultPage.Name = "tabPage1";
+            _defaultPage.Padding = new Padding(3);
+            _defaultPage.Size = new System.Drawing.Size(508, 369);
+            _defaultPage.TabIndex = 0;
+            _defaultPage.Text = "No Connection";
+            _defaultPage.UseVisualStyleBackColor = true;
 
             sayLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             sayLabel.AutoSize = true;
@@ -81,7 +80,7 @@ namespace RustManager.General
             commandBox.Size = new System.Drawing.Size(495, 20);
             commandBox.TabIndex = 3;
 
-            return defaultPage;
+            return _defaultPage;
         }
     }
 }

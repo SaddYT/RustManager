@@ -42,7 +42,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.ServerPort = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.IPBox = new System.Windows.Forms.TextBox();
+            this.AddressBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.CreateButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
@@ -82,7 +82,7 @@
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.ServerPort);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.IPBox);
+            this.groupBox1.Controls.Add(this.AddressBox);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 70);
             this.groupBox1.Name = "groupBox1";
@@ -188,10 +188,10 @@
             // 
             // IPBox
             // 
-            this.IPBox.Location = new System.Drawing.Point(7, 77);
-            this.IPBox.Name = "IPBox";
-            this.IPBox.Size = new System.Drawing.Size(174, 20);
-            this.IPBox.TabIndex = 4;
+            this.AddressBox.Location = new System.Drawing.Point(7, 77);
+            this.AddressBox.Name = "IPBox";
+            this.AddressBox.Size = new System.Drawing.Size(174, 20);
+            this.AddressBox.TabIndex = 4;
             // 
             // label1
             // 
@@ -248,7 +248,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown ServerPort;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox IPBox;
+        private System.Windows.Forms.TextBox AddressBox;
         private System.Windows.Forms.TextBox NameBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button CreateButton;

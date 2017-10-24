@@ -47,7 +47,8 @@ namespace RustManager.Forms
                 return;
             }
 
-            ServerItem item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == ServerList.Text);
+            var item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == ServerList.Text);
+
             if (item == null)
             {
                 RefreshServerList();
@@ -59,16 +60,21 @@ namespace RustManager.Forms
 
         private void TabPanel_ControlAdded(object sender, ControlEventArgs e)
         {
-            TabControl control = (TabControl)sender;
+            var control = sender as TabControl;
             control.SelectTab(control.TabCount - 1);
         }
 
         private void TabPanel_SelectedIndexChanged(object sender, EventArgs e)
         {
-            int selectedIndex = TabPanel.SelectedIndex;
+            var selectedIndex = TabPanel.SelectedIndex;
             var page = TabPanel.TabPages[selectedIndex];
             var foundArray = page.Controls.Find("OutputBox", false);
-            if (foundArray.Count() == 0) return;
+
+            if (foundArray.Count() == 0)
+            {
+                return;
+            }
+
             var outputBox = (TextBox)foundArray[0];
 
             outputBox.SelectionStart = outputBox.Text.Length;
@@ -82,23 +88,33 @@ namespace RustManager.Forms
 
         public void OutputText(string tabName, string text)
         {
-            int index = TabPanel.TabPages.IndexOfKey(tabName);
+            var index = TabPanel.TabPages.IndexOfKey(tabName);
             var page = TabPanel.TabPages[index];
             var foundArray = page.Controls.Find("OutputBox", false);
-            if (foundArray.Count() == 0) return;
+
+            if (foundArray.Count() == 0)
+            {
+                return;
+            }
+
             var outputBox = (TextBox)foundArray[0];
 
             if (outputBox.InvokeRequired)
             {
+                if (Instance.IsDisposed)
+                {
+                    return;
+                }
+
                 var callback = new OutputTextCallback(OutputText);
-                if (MainForm.Instance.IsDisposed) return;
-                Invoke(callback, new object[] { tabName, text });
+                callback(tabName, text);
+
                 return;
             }
 
             text = text.Replace("\n", "\r\n");
 
-            string currentTime = DateTime.Now.ToShortTimeString();
+            var currentTime = DateTime.Now.ToShortTimeString();
 
             outputBox.AppendText($"{currentTime} | {text}\r\n");
         }

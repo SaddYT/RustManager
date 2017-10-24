@@ -20,20 +20,20 @@ namespace RustManager.Forms
 
         public static void ShowForm()
         {
-            if (Manage.Instance == null || Manage.Instance.IsDisposed)
+            if (Instance == null || Instance.IsDisposed)
             {
-                Manage.Instance = new Manage();
-                Manage.Instance.Show();
+                Instance = new Manage();
+                Instance.Show();
                 return;
             }
 
-            if (Manage.Instance.Visible)
+            if (Instance.Visible)
             {
-                Manage.Instance.BringToFront();
+                Instance.BringToFront();
                 return;
             }
 
-            Manage.Instance.Show();
+            Instance.Show();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace RustManager.Forms
                 return;
             }
 
-            if (string.IsNullOrEmpty(IPBox.Text) || !IPAddress.TryParse(IPBox.Text, out IPAddress ipAddress))
+            if (string.IsNullOrEmpty(AddressBox.Text) || !IPAddress.TryParse(AddressBox.Text, out IPAddress ipAddress))
             {
                 MessageBox.Show("You must enter a (valid) IP address.");
                 return;
@@ -56,10 +56,14 @@ namespace RustManager.Forms
                 return;
             }
             
-            ServerItem serverItem = new ServerItem(NameBox.Text, ipAddress.ToString(), (int)ServerPort.Value, (int)RCONPort.Value, PasswordBox.Text, ConnectOnStartupCheck.Checked);
-
+            var serverItem = new ServerModel(NameBox.Text, ipAddress.ToString(),
+                (int)ServerPort.Value, (int)RCONPort.Value, PasswordBox.Text, ConnectOnStartupCheck.Checked);
             var search = DataFileSystem.Data.AllServers.Where(x => x.Name == serverItem.Name);
-            if (search.Any()) DataFileSystem.Data.AllServers.Remove(search.First());
+
+            if (search.Any())
+            {
+                DataFileSystem.Data.AllServers.Remove(search.First());
+            }
 
             DataFileSystem.Data.AllServers.Add(serverItem);
             DataFileSystem.SaveData();
@@ -75,17 +79,22 @@ namespace RustManager.Forms
 
         private void ServerList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string currentItem = ServerList.Text;
+            var currentItem = ServerList.Text;
 
-            ServerItem item = null;
+            ServerModel item = null;
+
             if (!string.IsNullOrEmpty(currentItem))
             {
                 item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
             }
-            if (item == null) item = new ServerItem();
+
+            if (item == null)
+            {
+                item = new ServerModel();
+            }
 
             NameBox.Text = item.Name;
-            IPBox.Text = item.IP;
+            AddressBox.Text = item.Address;
             ServerPort.Value = item.Port;
             RCONPort.Value = item.RconPort;
             PasswordBox.Text = item.Password;
@@ -94,14 +103,16 @@ namespace RustManager.Forms
 
         private void DeleteButton_Click(object sender, EventArgs e)
         {
-            string currentItem = ServerList.Text;
+            var currentItem = ServerList.Text;
+
             if (string.IsNullOrEmpty(currentItem))
             {
                 MessageBox.Show("There is no server to delete.");
                 return;
             }
 
-            ServerItem item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
+            var item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
+
             if (item == null)
             {
                 RefreshServerList();
@@ -110,6 +121,7 @@ namespace RustManager.Forms
 
             DataFileSystem.Data.AllServers.Remove(item);
             DataFileSystem.SaveData();
+
             RefreshServerList();
         }
 
@@ -121,7 +133,7 @@ namespace RustManager.Forms
         private void CreateButton_Click(object sender, EventArgs e)
         {
             NameBox.Text = "";
-            IPBox.Text = "";
+            AddressBox.Text = "";
             ServerPort.Value = 0;
             RCONPort.Value = 0;
             PasswordBox.Text = "";
