@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using RustManager.Data;
+﻿using System.Linq;
+using System.Collections.Generic;
+
 using RustManager.Forms;
-using RustManager.General;
+using RustManager.Managers;
 
 namespace RustManager.ServerManagement
 {
-    class ServerManager
+    public class ServerManager
     {
         public static List<ServerConnection> ConnectedServers = new List<ServerConnection>();
 
@@ -40,7 +39,7 @@ namespace RustManager.ServerManagement
         
         public static void ConnectToAll(bool connectOnLoad = false)
         {
-            var servers = DataFileSystem.Data.AllServers.Where(x => (connectOnLoad) ? x.ConnectOnLoad : true);
+            var servers = DataFileManager.Data.AllServers.Where(x => (connectOnLoad) ? x.ConnectOnLoad : true);
             servers.ToList().ForEach(x => Connect(x));
         }
     }

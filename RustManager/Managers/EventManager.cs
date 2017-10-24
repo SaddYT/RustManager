@@ -1,10 +1,10 @@
 ﻿using System;
-using RustManager.Data;
+
 using RustManager.ServerManagement;
 
-namespace RustManager.General
+namespace RustManager.Managers
 {
-    class Events
+    public class EventManager
     {
         public static void RegisterEvents()
         {
@@ -15,12 +15,12 @@ namespace RustManager.General
 
         private static void OnProcessLoad()
         {
-            DataFileSystem.ReadData();
+            DataFileManager.ReadData();
         }
         
         private static void ProcessExit(object sender, EventArgs e)
         {
-            DataFileSystem.SaveData();
+            DataFileManager.SaveData();
 
             ServerManager.ConnectedServers.ForEach(x => x.Disconnect());
         }

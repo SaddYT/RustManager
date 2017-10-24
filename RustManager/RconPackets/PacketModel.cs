@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using RustManager.General;
+using RustManager.Managers;
 
-namespace RustManager.RconPacketModels
+namespace RustManager.RconPackets
 {
-    class PacketModel
+    public class PacketModel
     {
         internal int Id;
         internal PacketTypeModel Type;
@@ -14,7 +14,7 @@ namespace RustManager.RconPacketModels
 
         public PacketModel()
         {
-            Id = PacketIDHelper.GeneratePacketID();
+            Id = PacketManager.GeneratePacketID();
         }
 
         public static PacketModel ReadData(byte[] data)
@@ -73,7 +73,7 @@ namespace RustManager.RconPacketModels
 
         public void Dispose()
         {
-            PacketIDHelper.UsedPacket(Id);
+            PacketManager.UsedPacket(Id);
         }
     }
 }

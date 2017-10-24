@@ -114,6 +114,9 @@
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
+    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase">
       <Private>False</Private>
     </Reference>
@@ -122,10 +125,9 @@
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="General\AssemblyManager.cs" />
-    <Compile Include="Data\DataFileSystem.cs" />
-    <Compile Include="Data\StoredData.cs" />
-    <Compile Include="General\Events.cs" />
+    <Compile Include="Managers\AssemblyManager.cs" />
+    <Compile Include="Managers\DataFileManager.cs" />
+    <Compile Include="Managers\EventManager.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,19 +137,19 @@
     <Compile Include="Forms\Manage.Designer.cs">
       <DependentUpon>Manage.cs</DependentUpon>
     </Compile>
-    <Compile Include="General\PacketIDHelper.cs" />
-    <Compile Include="General\Program.cs" />
+    <Compile Include="Managers\PacketManager.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerManagement\ServerConnection.cs" />
     <Compile Include="ServerManagement\RconConnection.cs" />
-    <Compile Include="RconPacketModels\AuthPacketModel.cs" />
-    <Compile Include="RconPacketModels\AuthReponsePacketModel.cs" />
-    <Compile Include="RconPacketModels\CommandPacketModel.cs" />
-    <Compile Include="RconPacketModels\PacketModel.cs" />
-    <Compile Include="RconPacketModels\PacketTypeModel.cs" />
+    <Compile Include="RconPackets\AuthPacketModel.cs" />
+    <Compile Include="RconPackets\AuthReponsePacketModel.cs" />
+    <Compile Include="RconPackets\CommandPacketModel.cs" />
+    <Compile Include="RconPackets\PacketModel.cs" />
+    <Compile Include="RconPackets\PacketTypeModel.cs" />
     <Compile Include="ServerManagement\ServerModel.cs" />
     <Compile Include="ServerManagement\ServerManager.cs" />
-    <Compile Include="General\TabManager.cs" />
+    <Compile Include="Managers\TabManager.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -200,6 +202,9 @@
     <EmbeddedResource Include="Resources\System.Reactive.Interfaces.dll" />
     <EmbeddedResource Include="Resources\System.Reactive.Linq.dll" />
     <EmbeddedResource Include="Resources\System.Reactive.PlatformServices.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="WebSockets\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

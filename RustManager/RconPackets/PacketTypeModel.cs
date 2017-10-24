@@ -1,4 +1,4 @@
-﻿namespace RustManager.RconPacketModels
+﻿namespace RustManager.RconPackets
 {
     public enum PacketTypeModel
     {

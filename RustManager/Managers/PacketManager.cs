@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RustManager.General
+namespace RustManager.Managers
 {
-    class PacketIDHelper
+    public class PacketManager
     {
         // TODO: Implement properly
 

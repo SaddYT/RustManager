@@ -1,6 +1,6 @@
-﻿namespace RustManager.RconPacketModels
+﻿namespace RustManager.RconPackets
 {
-    class CommandPacketModel : PacketModel
+    public class CommandPacketModel : PacketModel
     {
         public CommandPacketModel(string command)
         {

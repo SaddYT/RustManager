@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Collections.Generic;
 
-namespace RustManager.General
+namespace RustManager.Managers
 {
-    class AssemblyManager
+    public class AssemblyManager
     {
         private static Dictionary<string, Assembly> _libraries = new Dictionary<string, Assembly>();
 

@@ -1,6 +1,6 @@
-﻿namespace RustManager.RconPacketModels
+﻿namespace RustManager.RconPackets
 {
-    class AuthPacketModel : PacketModel
+    public class AuthPacketModel : PacketModel
     {
         public AuthPacketModel(string password)
         {

@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using RustManager.Data;
+using RustManager.Managers;
 using RustManager.ServerManagement;
 
 namespace RustManager.Forms
 {
     public partial class Manage : Form
     {
-        static Manage Instance;
+        private static Manage Instance;
 
         public Manage()
         {
@@ -58,15 +58,15 @@ namespace RustManager.Forms
             
             var serverItem = new ServerModel(NameBox.Text, ipAddress.ToString(),
                 (int)ServerPort.Value, (int)RCONPort.Value, PasswordBox.Text, ConnectOnStartupCheck.Checked);
-            var search = DataFileSystem.Data.AllServers.Where(x => x.Name == serverItem.Name);
+            var search = DataFileManager.Data.AllServers.Where(x => x.Name == serverItem.Name);
 
             if (search.Any())
             {
-                DataFileSystem.Data.AllServers.Remove(search.First());
+                DataFileManager.Data.AllServers.Remove(search.First());
             }
 
-            DataFileSystem.Data.AllServers.Add(serverItem);
-            DataFileSystem.SaveData();
+            DataFileManager.Data.AllServers.Add(serverItem);
+            DataFileManager.SaveData();
             
             RefreshServerList();
         }
@@ -74,7 +74,7 @@ namespace RustManager.Forms
         void RefreshServerList()
         {
             ServerList.DataSource = null;
-            ServerList.DataSource = DataFileSystem.Data.AllServers.Select(x => x.Name).ToList();
+            ServerList.DataSource = DataFileManager.Data.AllServers.Select(x => x.Name).ToList();
         }
 
         private void ServerList_SelectedIndexChanged(object sender, EventArgs e)
@@ -85,7 +85,7 @@ namespace RustManager.Forms
 
             if (!string.IsNullOrEmpty(currentItem))
             {
-                item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
+                item = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
             }
 
             if (item == null)
@@ -111,7 +111,7 @@ namespace RustManager.Forms
                 return;
             }
 
-            var item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
+            var item = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
 
             if (item == null)
             {
@@ -119,8 +119,8 @@ namespace RustManager.Forms
                 return;
             }
 
-            DataFileSystem.Data.AllServers.Remove(item);
-            DataFileSystem.SaveData();
+            DataFileManager.Data.AllServers.Remove(item);
+            DataFileManager.SaveData();
 
             RefreshServerList();
         }
