@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using ReactiveSockets;
-using RustManager.RconPacketModels;
+using RustManager.RconPackets;
 
 namespace RustManager.ServerManagement
 {
-    class RconConnection
+    public class RconConnection
     {
-        private string _ip;
+        private string _address;
         private int _rconPort;
         private string _password;
         private Action<string> _outputFunction;
@@ -18,7 +18,7 @@ namespace RustManager.ServerManagement
 
         public RconConnection(string ip, int rconPort, string password, Action<string> outputFunction)
         {
-            _ip = ip;
+            _address = ip;
             _rconPort = rconPort;
             _password = password;
             _outputFunction = outputFunction;
@@ -27,7 +27,7 @@ namespace RustManager.ServerManagement
         public void Connect()
         {
             // Connect
-            _client = new ReactiveClient(_ip, _rconPort);
+            _client = new ReactiveClient(_address, _rconPort);
 
             // Setup IObservable message recievr 
             var messages = from header in _client.Receiver.Buffer(4) // read packet length
@@ -118,7 +118,7 @@ namespace RustManager.ServerManagement
 
         private async void Client_Connected(object sender, EventArgs e)
         {
-            _outputFunction($"Connecting to {_ip}:{_rconPort}...");
+            _outputFunction($"Connecting to {_address}:{_rconPort}...");
 
             // Send auth
             var authPacket = new AuthPacketModel(_password);

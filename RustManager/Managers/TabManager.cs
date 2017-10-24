@@ -1,8 +1,8 @@
 ﻿using System.Windows.Forms;
 
-namespace RustManager.General
+namespace RustManager.Managers
 {
-    class TabManager
+    public class TabManager
     {
         private TabPage _defaultPage;
         public Label sayLabel = new Label();

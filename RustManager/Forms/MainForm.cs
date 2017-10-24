@@ -2,8 +2,8 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using RustManager.Data;
-using RustManager.General;
+
+using RustManager.Managers;
 using RustManager.ServerManagement;
 
 namespace RustManager.Forms
@@ -27,7 +27,7 @@ namespace RustManager.Forms
         {
             AssemblyManager.Initialize();
             
-            General.Events.RegisterEvents();
+            Managers.EventManager.RegisterEvents();
 
             RefreshServerList();
 
@@ -47,7 +47,7 @@ namespace RustManager.Forms
                 return;
             }
 
-            var item = DataFileSystem.Data.AllServers.FirstOrDefault(x => x.Name == ServerList.Text);
+            var item = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == ServerList.Text);
 
             if (item == null)
             {
@@ -75,7 +75,7 @@ namespace RustManager.Forms
                 return;
             }
 
-            var outputBox = (TextBox)foundArray[0];
+            var outputBox = foundArray[0] as TextBox;
 
             outputBox.SelectionStart = outputBox.Text.Length;
             outputBox.ScrollToCaret();
@@ -97,7 +97,7 @@ namespace RustManager.Forms
                 return;
             }
 
-            var outputBox = (TextBox)foundArray[0];
+            var outputBox = foundArray[0] as TextBox;
 
             if (outputBox.InvokeRequired)
             {
@@ -122,7 +122,7 @@ namespace RustManager.Forms
         public void RefreshServerList()
         {
             ServerList.DataSource = null;
-            ServerList.DataSource = DataFileSystem.Data.AllServers.Select(x => x.Name).ToList();
+            ServerList.DataSource = DataFileManager.Data.AllServers.Select(x => x.Name).ToList();
         }
     }
 }

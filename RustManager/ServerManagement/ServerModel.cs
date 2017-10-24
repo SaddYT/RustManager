@@ -1,17 +1,12 @@
 ﻿namespace RustManager.ServerManagement
 {
-    class ServerModel
+    public class ServerModel
     {
         public string Name { get; set; } = "";
-
         public string Address { get; set; } = "";
-
         public int Port { get; set; } = 0;
-
         public int RconPort { get; set; } = 0;
-
         public string Password { get; set; } = "";
-
         public bool ConnectOnLoad { get; set; } = false;
 
         public ServerModel() { }

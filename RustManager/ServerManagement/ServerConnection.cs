@@ -1,20 +1,20 @@
 ﻿using System.Windows.Forms;
 using RustManager.Forms;
-using RustManager.General;
+using RustManager.Managers;
 
 namespace RustManager.ServerManagement
 {
-    class ServerConnection
+    public class ServerConnection
     {
         public ServerModel ServerInfo;
         public TabManager Tab;
         public RconConnection RconInstance;
 
-        public ServerConnection(ServerModel item, TabManager tab)
+        public ServerConnection(ServerModel model, TabManager tab)
         {
-            ServerInfo = item;
+            ServerInfo = model;
             Tab = tab;
-            RconInstance = new RconConnection(item.Address, item.RconPort, item.Password, (message) => OnMessage(message));
+            RconInstance = new RconConnection(model.Address, model.RconPort, model.Password, (message) => OnMessage(message));
         }
 
         public void Connect() => RconInstance.Connect();
