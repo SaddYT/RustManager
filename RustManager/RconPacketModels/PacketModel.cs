@@ -4,49 +4,49 @@ using System.Linq;
 using System.Text;
 using RustManager.General;
 
-namespace RustManager.RCONPackets
+namespace RustManager.RconPacketModels
 {
-    class RCONPacket
+    class PacketModel
     {
-        internal int ID;
-        internal RCONPacketType Type;
+        internal int Id;
+        internal PacketTypeModel Type;
         internal string Body;
 
-        public RCONPacket()
+        public PacketModel()
         {
-            this.ID = PacketIDHelper.GeneratePacketID();
+            Id = PacketIDHelper.GeneratePacketID();
         }
 
-        public static RCONPacket ReadData(byte[] data)
+        public static PacketModel ReadData(byte[] data)
         {
             // Skip length header (4 bytes)
             data = data.Skip(4).ToArray();
 
             // Grab packet ID (4 bytes)
-            int packetID = BitConverter.ToInt32(data.Take(4).ToArray(), 0);
+            var packetID = BitConverter.ToInt32(data.Take(4).ToArray(), 0);
             data = data.Skip(4).ToArray();
 
             // Grab packet type (4 bytes)
-            RCONPacketType packetType = (RCONPacketType)BitConverter.ToInt32(data.Take(4).ToArray(), 0);
+            var packetType = (PacketTypeModel)BitConverter.ToInt32(data.Take(4).ToArray(), 0);
             data = data.Skip(4).ToArray();
 
             // Get body, remove last two bytes (string terminator)
             data = data.Take(data.Length - 2).ToArray();
             string packetBody = Encoding.UTF8.GetString(data);
 
-            if (packetType == RCONPacketType.AUTH_RESPONSE)
+            if (packetType == PacketTypeModel.AUTH_RESPONSE)
             {
-                return new RCONAuthResponsePacket()
+                return new AuthReponsePacketModel()
                 {
-                    ID = packetID,
+                    Id = packetID,
                     Type = packetType,
                     Body = packetBody
                 };
             }
 
-            return new RCONPacket()
+            return new PacketModel()
             {
-                ID = packetID,
+                Id = packetID,
                 Type = packetType,
                 Body = packetBody
             };
@@ -54,14 +54,13 @@ namespace RustManager.RCONPackets
 
         public byte[] ToBytes()
         {
-            List<byte> byteList = new List<byte>();
+            var byteList = new List<byte>();
 
-            byte[] reqID = BitConverter.GetBytes(this.ID);
-            byte[] type = BitConverter.GetBytes((int)this.Type);
-            byte[] data = UTF8Encoding.UTF8.GetBytes(this.Body);
-            byte[] whitespace = new byte[] { 0, 0 };
-
-            byte[] length = BitConverter.GetBytes(4 + data.Length);
+            var reqID = BitConverter.GetBytes(Id);
+            var type = BitConverter.GetBytes((int)Type);
+            var data = Encoding.UTF8.GetBytes(Body);
+            var whitespace = new byte[] { 0, 0 };
+            var length = BitConverter.GetBytes(4 + data.Length);
 
             byteList.AddRange(length);
             byteList.AddRange(reqID);
@@ -74,7 +73,7 @@ namespace RustManager.RCONPackets
 
         public void Dispose()
         {
-            PacketIDHelper.UsedPacket(this.ID);
+            PacketIDHelper.UsedPacket(Id);
         }
     }
 }

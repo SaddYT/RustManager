@@ -1,6 +1,6 @@
-﻿namespace RustManager.RCONPackets
+﻿namespace RustManager.RconPacketModels
 {
-    public enum RCONPacketType
+    public enum PacketTypeModel
     {
         RESPONSE_VALUE = 0,
         EXECCOMMAND = 2,

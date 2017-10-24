@@ -139,13 +139,13 @@
     <Compile Include="General\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerManagement\ServerConnection.cs" />
-    <Compile Include="ServerManagement\RCONConnection.cs" />
-    <Compile Include="RCONPackets\RCONAuthPacket.cs" />
-    <Compile Include="RCONPackets\RCONAuthResponsePacket.cs" />
-    <Compile Include="RCONPackets\RCONCommandPacket.cs" />
-    <Compile Include="RCONPackets\RCONPacket.cs" />
-    <Compile Include="RCONPackets\RCONPacketType.cs" />
-    <Compile Include="ServerManagement\ServerItem.cs" />
+    <Compile Include="ServerManagement\RconConnection.cs" />
+    <Compile Include="RconPacketModels\AuthPacketModel.cs" />
+    <Compile Include="RconPacketModels\AuthReponsePacketModel.cs" />
+    <Compile Include="RconPacketModels\CommandPacketModel.cs" />
+    <Compile Include="RconPacketModels\PacketModel.cs" />
+    <Compile Include="RconPacketModels\PacketTypeModel.cs" />
+    <Compile Include="ServerManagement\ServerModel.cs" />
     <Compile Include="ServerManagement\ServerManager.cs" />
     <Compile Include="General\TabManager.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
@@ -203,6 +203,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "S:\Libraries\Documents\Visual Studio 2017\Projects\RustManager\RustManager\bin\Debug\RustManager.exe" "S:\Libraries\Desktop\RustManager.exe"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

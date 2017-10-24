@@ -5,6 +5,6 @@ namespace RustManager.Data
 {
     class StoredData
     {
-        public List<ServerItem> AllServers = new List<ServerItem>();
+        public List<ServerModel> AllServers = new List<ServerModel>();
     }
 }

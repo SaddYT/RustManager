@@ -6,40 +6,46 @@ namespace RustManager.ServerManagement
 {
     class ServerConnection
     {
-        public ServerItem ServerInfo;
+        public ServerModel ServerInfo;
         public TabManager Tab;
-        public RCONConnection RCONInstance;
+        public RconConnection RconInstance;
 
-        public ServerConnection(ServerItem item, TabManager tab)
+        public ServerConnection(ServerModel item, TabManager tab)
         {
-            this.ServerInfo = item;
-            this.Tab = tab;
-            this.RCONInstance = new RCONConnection(item.IP, item.RconPort, item.Password, (message) => OnMessage(message));
+            ServerInfo = item;
+            Tab = tab;
+            RconInstance = new RconConnection(item.Address, item.RconPort, item.Password, (message) => OnMessage(message));
         }
 
-        public void Connect() => RCONInstance.Connect();
+        public void Connect() => RconInstance.Connect();
 
-        public void Disconnect() => RCONInstance.Disconnect();
+        public void Disconnect() => RconInstance.Disconnect();
 
         public void OnMessage(string output) => MainForm.Instance.OutputText(ServerInfo.Name, output);
 
         internal void OnCommandBoxKey(object sender, KeyEventArgs e)
         {
-            TextBox textbox = (TextBox)sender;
+            var textbox = sender as TextBox;
 
-            if (e.KeyCode != Keys.Enter) return;
+            if (e.KeyCode != Keys.Enter)
+            {
+                return;
+            }
 
-            RCONInstance.SendCommand(textbox.Text);
+            RconInstance.SendCommand(textbox.Text);
             textbox.Text = "";
         }
 
         internal void OnChatBoxKey(object sender, KeyEventArgs e)
         {
-            TextBox textbox = (TextBox)sender;
+            var textbox = sender as TextBox;
 
-            if (e.KeyCode != Keys.Enter) return;
+            if (e.KeyCode != Keys.Enter)
+            {
+                return;
+            }
 
-            RCONInstance.SendCommand($"global.say \"{textbox.Text}\"");
+            RconInstance.SendCommand($"global.say \"{textbox.Text}\"");
             textbox.Text = "";
         }
     }

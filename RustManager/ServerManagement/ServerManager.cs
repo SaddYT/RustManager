@@ -11,23 +11,24 @@ namespace RustManager.ServerManagement
     {
         public static List<ServerConnection> ConnectedServers = new List<ServerConnection>();
 
-        public static void Connect(ServerItem item)
+        public static void Connect(ServerModel item)
         {
             MainForm.Instance.Tabs.TabPages.RemoveByKey("No Connection");
 
             if (ConnectedServers.Any(x => x.ServerInfo.Name == item.Name))
             {
-                int tabIndex = MainForm.Instance.Tabs.TabPages.IndexOfKey(item.Name);
+                var tabIndex = MainForm.Instance.Tabs.TabPages.IndexOfKey(item.Name);
                 MainForm.Instance.Tabs.SelectTab(tabIndex);
+
                 return;
             }
 
             var tabManager = TabManager.Instance;
-            TabPage page = tabManager.DefaultPage;
+            var page = tabManager.DefaultPage;
             page.Name = item.Name;
             page.Text = item.Name;
 
-            ServerConnection connection = new ServerConnection(item, tabManager);
+            var connection = new ServerConnection(item, tabManager);
 
             tabManager.commandBox.KeyUp += connection.OnCommandBoxKey;
             tabManager.sayBox.KeyUp += connection.OnChatBoxKey;
@@ -40,7 +41,7 @@ namespace RustManager.ServerManagement
         public static void ConnectToAll(bool connectOnLoad = false)
         {
             var servers = DataFileSystem.Data.AllServers.Where(x => (connectOnLoad) ? x.ConnectOnLoad : true);
-            servers.ToList().ForEach(x => ServerManager.Connect(x));
+            servers.ToList().ForEach(x => Connect(x));
         }
     }
 }

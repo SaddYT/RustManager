@@ -3,102 +3,112 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using ReactiveSockets;
-using RustManager.RCONPackets;
+using RustManager.RconPacketModels;
 
 namespace RustManager.ServerManagement
 {
-    class RCONConnection
+    class RconConnection
     {
-        private string IP;
-        private int RconPort;
-        private string Password;
-        private Action<string> OutputFunction;
+        private string _ip;
+        private int _rconPort;
+        private string _password;
+        private Action<string> _outputFunction;
 
-        private ReactiveClient Client;
+        private ReactiveClient _client;
 
-        public RCONConnection(string ip, int rconPort, string password, Action<string> outputFunction)
+        public RconConnection(string ip, int rconPort, string password, Action<string> outputFunction)
         {
-            this.IP = ip;
-            this.RconPort = rconPort;
-            this.Password = password;
-            this.OutputFunction = outputFunction;
+            _ip = ip;
+            _rconPort = rconPort;
+            _password = password;
+            _outputFunction = outputFunction;
         }
 
         public void Connect()
         {
             // Connect
-            Client = new ReactiveClient(IP, RconPort);
+            _client = new ReactiveClient(_ip, _rconPort);
 
             // Setup IObservable message recievr 
-            IObservable<byte[]> messages = from header in Client.Receiver.Buffer(4) // read packet length
+            var messages = from header in _client.Receiver.Buffer(4) // read packet length
                                            let length = BitConverter.ToInt32(header.ToArray(), 0) // calc. packet length
-                                           let body = Client.Receiver.Take(length).ToEnumerable().ToArray() // read body
+                                           let body = _client.Receiver.Take(length).ToEnumerable().ToArray() // read body
                                            select header.ToArray().Concat(body).ToArray(); // return original packet
 
             // Setup events for on new TCP message
             messages.SubscribeOn(TaskPoolScheduler.Default).Subscribe(message => OnClientMessage(message));
 
             // Connection event & connect
-            Client.Connected += Client_Connected;
-            Client.ConnectAsync();
+            _client.Connected += Client_Connected;
+            _client.ConnectAsync();
         }
 
         public void Disconnect()
         {
-            if (Client.IsConnected)
+            if (_client.IsConnected)
             {
-                Client.Disconnect();
+                _client.Disconnect();
             }
         }
 
-        public void SendCommand(string command)
+        public async void SendCommand(string command)
         {
             // Create CommandPacket and send
-            RCONCommandPacket commandPacket = new RCONCommandPacket(command);
-            Client.SendAsync(commandPacket.ToBytes());
+            var commandPacket = new CommandPacketModel(command);
+            await _client.SendAsync(commandPacket.ToBytes());
         }
 
         private void OnClientMessage(byte[] message)
         {
             // Read RCON message 
-            RCONPacket packet = RCONPacket.ReadData(message);
+            PacketModel packet = PacketModel.ReadData(message);
 
             // Check if packet is server response (0) or invalid 
             // RCON auth response (-1)
-            if (packet.ID != 0 && packet.ID != -1) return;
+            if (packet.Id != 0 && packet.Id != -1) return;
 
             switch (packet.Type)
             {
-                case RCONPacketType.AUTH_RESPONSE:
+                case PacketTypeModel.AUTH_RESPONSE:
                     {
                         // Read packet as AuthResponse
-                        RCONAuthResponsePacket authPacket = packet as RCONAuthResponsePacket;
+                        var authPacket = packet as AuthReponsePacketModel;
+
                         if (!authPacket.WasSuccessful())
                         {
-                            OutputFunction.Invoke("Failed to connect: incorrect password.");
+                            _outputFunction.Invoke("Failed to connect: incorrect password.");
                             break;
                         }
-                        OutputFunction.Invoke("Successfully connected!");
+
+                        _outputFunction("Successfully connected!");
                         break;
                     }
 
-                case RCONPacketType.RESPONSE_VALUE:
+                case PacketTypeModel.RESPONSE_VALUE:
                     {
-                        if (string.IsNullOrEmpty(packet.Body)) break;
-                        OutputFunction.Invoke(packet.Body);
+                        if (string.IsNullOrEmpty(packet.Body))
+                        {
+                            break;
+                        }
+
+                        _outputFunction(packet.Body);
                         break;
                     }
 
-                case RCONPacketType.DATA:
+                case PacketTypeModel.DATA:
                     {
-                        if (string.IsNullOrEmpty(packet.Body)) break;
-                        OutputFunction.Invoke(packet.Body);
+                        if (string.IsNullOrEmpty(packet.Body))
+                        {
+                            break;
+                        }
+
+                        _outputFunction(packet.Body);
                         break;
                     }
 
                 default:
                     {
-                        OutputFunction.Invoke($"Received uncaught packet of type {packet.Type}");
+                        _outputFunction($"Received uncaught packet of type {packet.Type}");
                         break;
                     }
             }
@@ -106,13 +116,13 @@ namespace RustManager.ServerManagement
             packet.Dispose();
         }
 
-        private void Client_Connected(object sender, EventArgs e)
+        private async void Client_Connected(object sender, EventArgs e)
         {
-            OutputFunction.Invoke($"Connecting to {IP}:{RconPort}...");
+            _outputFunction($"Connecting to {_ip}:{_rconPort}...");
 
             // Send auth
-            RCONAuthPacket authPacket = new RCONAuthPacket(Password);
-            Client.SendAsync(authPacket.ToBytes());
+            var authPacket = new AuthPacketModel(_password);
+            await _client.SendAsync(authPacket.ToBytes());
         }
     }
 }

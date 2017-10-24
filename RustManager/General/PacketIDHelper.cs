@@ -5,10 +5,10 @@ namespace RustManager.General
 {
     class PacketIDHelper
     {
-        // TODO: Implement properly?
+        // TODO: Implement properly
 
-        private static Random Random = new Random();
-        private static List<int> CurrentPackets = new List<int>();
+        private static Random _random = new Random();
+        private static List<int> _currentPackets = new List<int>();
 
         public static int GeneratePacketID()
         {
@@ -29,9 +29,9 @@ namespace RustManager.General
 
         public static void UsedPacket(int id)
         {
-            if (CurrentPackets.Contains(id))
+            if (_currentPackets.Contains(id))
             {
-                CurrentPackets.Remove(id);
+                _currentPackets.Remove(id);
             }
         }
     }
