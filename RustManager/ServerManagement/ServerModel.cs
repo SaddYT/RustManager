@@ -8,10 +8,11 @@
         public int RconPort { get; set; } = 0;
         public string Password { get; set; } = "";
         public bool ConnectOnLoad { get; set; } = false;
+        public bool LegacyServer { get; set; } = false;
 
         public ServerModel() { }
 
-        public ServerModel(string name, string ip, int port, int rconPort, string password, bool connectOnLoad)
+        public ServerModel(string name, string ip, int port, int rconPort, string password, bool connectOnLoad, bool legacyServer)
         {
             Name = name;
             Address = ip;
@@ -19,6 +20,7 @@
             RconPort = rconPort;
             Password = password;
             ConnectOnLoad = connectOnLoad;
+            LegacyServer = legacyServer;
         }
     }
 }

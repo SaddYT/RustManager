@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using RustManager.Forms;
 using RustManager.Managers;
+using RustManager.WebSockets;
 
 namespace RustManager.ServerManagement
 {
@@ -10,13 +11,13 @@ namespace RustManager.ServerManagement
     {
         public static List<ServerConnection> ConnectedServers = new List<ServerConnection>();
 
-        public static void Connect(ServerModel item)
+        public static void Connect(ServerModel model)
         {
             MainForm.Instance.Tabs.TabPages.RemoveByKey("No Connection");
 
-            if (ConnectedServers.Any(x => x.ServerInfo.Name == item.Name))
+            if (ConnectedServers.Any(x => x.ServerInfo.Name == model.Name))
             {
-                var tabIndex = MainForm.Instance.Tabs.TabPages.IndexOfKey(item.Name);
+                var tabIndex = MainForm.Instance.Tabs.TabPages.IndexOfKey(model.Name);
                 MainForm.Instance.Tabs.SelectTab(tabIndex);
 
                 return;
@@ -24,17 +25,22 @@ namespace RustManager.ServerManagement
 
             var tabManager = TabManager.Instance;
             var page = tabManager.DefaultPage;
-            page.Name = item.Name;
-            page.Text = item.Name;
+            page.Name = model.Name;
+            page.Text = model.Name;
 
-            var connection = new ServerConnection(item, tabManager);
+            if (model.LegacyServer)
+            {
+                var connection = new ServerConnection(model, tabManager);
 
-            tabManager.commandBox.KeyUp += connection.OnCommandBoxKey;
-            tabManager.sayBox.KeyUp += connection.OnChatBoxKey;
-            MainForm.Instance.Tabs.TabPages.Add(page);
+                tabManager.commandBox.KeyUp += connection.OnCommandBoxKey;
+                tabManager.sayBox.KeyUp += connection.OnChatBoxKey;
+                MainForm.Instance.Tabs.TabPages.Add(page);
 
-            ConnectedServers.Add(connection);
-            connection.Connect();
+                ConnectedServers.Add(connection);
+                connection.Connect();
+
+                return;
+            }
         }
         
         public static void ConnectToAll(bool connectOnLoad = false)
