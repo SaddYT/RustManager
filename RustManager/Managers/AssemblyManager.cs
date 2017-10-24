@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace RustManager.Managers
 {
-    class AssemblyManager
+    public class AssemblyManager
     {
         private static Dictionary<string, Assembly> _libraries = new Dictionary<string, Assembly>();
 

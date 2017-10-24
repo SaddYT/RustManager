@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
-using RustManager.Managers;
+﻿using System.Linq;
+using System.Collections.Generic;
+
 using RustManager.Forms;
 using RustManager.Managers;
 
 namespace RustManager.ServerManagement
 {
-    class ServerManager
+    public class ServerManager
     {
         public static List<ServerConnection> ConnectedServers = new List<ServerConnection>();
 
