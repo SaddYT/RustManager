@@ -8,12 +8,14 @@ namespace RustManager.ServerManagement
     {
         public ServerModel ServerInfo;
         public TabManager Tab;
+        public TabPage Page;
         public RconConnection RconInstance;
 
-        public ServerConnection(ServerModel model, TabManager tab)
+        public ServerConnection(ServerModel model, TabManager tab, TabPage page)
         {
             ServerInfo = model;
             Tab = tab;
+            Page = page;
             RconInstance = new RconConnection(model.Address, model.RconPort, model.Password, (message) => OnMessage(message));
         }
 
@@ -22,7 +24,7 @@ namespace RustManager.ServerManagement
         public void Disconnect() => RconInstance.Disconnect();
 
         public void OnMessage(string output) => MainForm.Instance.OutputText(ServerInfo.Name, output);
-
+        
         internal void OnCommandBoxKey(object sender, KeyEventArgs e)
         {
             var textbox = sender as TextBox;
@@ -47,6 +49,6 @@ namespace RustManager.ServerManagement
 
             RconInstance.SendCommand($"global.say \"{textbox.Text}\"");
             textbox.Text = "";
-        }
+        }     
     }
 }
