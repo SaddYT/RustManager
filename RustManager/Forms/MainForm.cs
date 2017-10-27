@@ -130,6 +130,23 @@ namespace RustManager.Forms
             }
         }
 
+        public void Reconnect(string tabName)
+        {
+            var page = Tools.FindTabPage(TabPanel, tabName);
+            if (page == null) return;
+
+            var connection = ServerManager.FindConnection(page);
+            if (connection == null) return;
+
+            ServerManager.Disconnect(connection);
+            TabPanel.TabPages.Remove(page);
+
+            var newInfo = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == connection.ServerInfo.Name);
+            if (newInfo == null) return;
+
+            ServerManager.Connect(newInfo);
+        }
+
         public void RefreshServerList()
         {
             ServerList.DataSource = null;
@@ -150,6 +167,7 @@ namespace RustManager.Forms
                     {
                         tab.ContextMenu = new ContextMenu();
                         tab.ContextMenu.MenuItems.Add(new MenuItem("Disconnect", (s, evt) => Disconnect(tab.Name)));
+                        tab.ContextMenu.MenuItems.Add(new MenuItem("Reconnect", (s, evt) => Reconnect(tab.Name)));
                         tab.ContextMenu.Show(TabPanel, e.Location);
                         return;
                     }
