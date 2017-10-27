@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 using RustManager.Forms;
 using RustManager.Managers;
-using RustManager.WebSockets;
 
 namespace RustManager.ServerManagement
 {
@@ -13,7 +12,7 @@ namespace RustManager.ServerManagement
 
         public static void Connect(ServerModel model)
         {
-            MainForm.Instance.Tabs.TabPages.RemoveByKey("No Connection");
+            MainForm.Instance.Tabs.TabPages.RemoveByKey("NoConnectionPage");
 
             if (ConnectedServers.Any(x => x.ServerInfo.Name == model.Name))
             {
@@ -25,28 +24,35 @@ namespace RustManager.ServerManagement
 
             var tabManager = TabManager.Instance;
             var page = tabManager.DefaultPage;
+            var connection = new ServerConnection(model, tabManager, page);
+
             page.Name = model.Name;
             page.Text = model.Name;
 
-            if (model.LegacyServer)
-            {
-                var connection = new ServerConnection(model, tabManager);
+            tabManager.commandBox.KeyUp += connection.OnCommandBoxKey;
+            tabManager.sayBox.KeyUp += connection.OnChatBoxKey;
+            MainForm.Instance.Tabs.TabPages.Add(page);
 
-                tabManager.commandBox.KeyUp += connection.OnCommandBoxKey;
-                tabManager.sayBox.KeyUp += connection.OnChatBoxKey;
-                MainForm.Instance.Tabs.TabPages.Add(page);
-
-                ConnectedServers.Add(connection);
-                connection.Connect();
-
-                return;
-            }
+            ConnectedServers.Add(connection);
+            connection.Connect();
         }
-        
+
+        public static void Disconnect(ServerConnection connection)
+        {
+            if (connection == null) return;
+
+            connection.Disconnect();
+            ConnectedServers.Remove(connection);
+        }
+
         public static void ConnectToAll(bool connectOnLoad = false)
         {
             var servers = DataFileManager.Data.AllServers.Where(x => (connectOnLoad) ? x.ConnectOnLoad : true);
             servers.ToList().ForEach(x => Connect(x));
         }
+
+        public static ServerConnection FindConnection(string name) => ConnectedServers.FirstOrDefault(x => x.ServerInfo.Name == name);
+
+        public static ServerConnection FindConnection(TabPage page) => ConnectedServers.FirstOrDefault(x => x.Page == page);
     }
 }
