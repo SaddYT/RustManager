@@ -107,6 +107,7 @@
             this.TabPanel.TabIndex = 4;
             this.TabPanel.SelectedIndexChanged += new System.EventHandler(this.TabPanel_SelectedIndexChanged);
             this.TabPanel.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.TabPanel_ControlAdded);
+            this.TabPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TabPanel_MouseClick);
             // 
             // MainForm
             // 
