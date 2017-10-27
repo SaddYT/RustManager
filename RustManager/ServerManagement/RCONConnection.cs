@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Threading;
 using ReactiveSockets;
 using RustManager.RconPackets;
 
@@ -41,6 +42,15 @@ namespace RustManager.ServerManagement
             // Connection event & connect
             _client.Connected += Client_Connected;
             _client.ConnectAsync();
+
+            _outputFunction($"Connecting to {_address}:{_rconPort}...");
+
+            Timer timer = null;
+            timer = new Timer((obj) =>
+            {
+                CheckForConnection();
+                timer.Dispose();
+            }, null, 5000, Timeout.Infinite);
         }
 
         public void Disconnect()
@@ -49,6 +59,14 @@ namespace RustManager.ServerManagement
             {
                 _client.Disconnect();
             }
+        }
+
+        private void CheckForConnection()
+        {
+            if (_client.IsConnected) return;
+
+            _outputFunction.Invoke($"Failed to connect!");
+            _client.Dispose();
         }
 
         public async void SendCommand(string command)
@@ -80,7 +98,7 @@ namespace RustManager.ServerManagement
                             break;
                         }
 
-                        _outputFunction("Successfully connected!");
+                        _outputFunction("Successfully authenticated!");
                         break;
                     }
 
@@ -118,7 +136,7 @@ namespace RustManager.ServerManagement
 
         private async void Client_Connected(object sender, EventArgs e)
         {
-            _outputFunction($"Connecting to {_address}:{_rconPort}...");
+            _outputFunction($"Connected! Authenticating...");
 
             // Send auth
             var authPacket = new AuthPacketModel(_password);
