@@ -114,8 +114,8 @@
     <Reference Include="System.Xml">
       <Private>False</Private>
     </Reference>
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    <Reference Include="websocket-sharp">
+      <HintPath>Resources\websocket-sharp.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase">
       <Private>False</Private>
@@ -141,15 +141,20 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerManagement\ServerConnection.cs" />
-    <Compile Include="ServerManagement\RconConnection.cs" />
-    <Compile Include="RconPackets\AuthPacketModel.cs" />
-    <Compile Include="RconPackets\AuthReponsePacketModel.cs" />
-    <Compile Include="RconPackets\CommandPacketModel.cs" />
-    <Compile Include="RconPackets\PacketModel.cs" />
-    <Compile Include="RconPackets\PacketTypeModel.cs" />
+    <Compile Include="ServerManagement\SourceRconConnection.cs" />
+    <Compile Include="SourceRconPackets\AuthPacketModel.cs" />
+    <Compile Include="SourceRconPackets\AuthReponsePacketModel.cs" />
+    <Compile Include="SourceRconPackets\CommandPacketModel.cs" />
+    <Compile Include="SourceRconPackets\PacketModel.cs" />
+    <Compile Include="SourceRconPackets\PacketTypeModel.cs" />
     <Compile Include="ServerManagement\ServerModel.cs" />
     <Compile Include="ServerManagement\ServerManager.cs" />
     <Compile Include="Managers\TabManager.cs" />
+    <Compile Include="Tools.cs" />
+    <Compile Include="WebSocketPackets\ChatMessageModel.cs" />
+    <Compile Include="WebSocketPackets\ChatPacketModel.cs" />
+    <Compile Include="WebSocketPackets\PacketModel.cs" />
+    <Compile Include="ServerManagement\WebSocketConnection.cs" />
     <EmbeddedResource Include="Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -196,6 +201,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\websocket-sharp.dll" />
     <EmbeddedResource Include="Resources\ReactiveSockets.dll" />
     <Content Include="Resources\RustManager Logo.ico" />
     <EmbeddedResource Include="Resources\System.Reactive.Core.dll" />
@@ -203,9 +209,7 @@
     <EmbeddedResource Include="Resources\System.Reactive.Linq.dll" />
     <EmbeddedResource Include="Resources\System.Reactive.PlatformServices.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="WebSockets\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

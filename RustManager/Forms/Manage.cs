@@ -57,7 +57,8 @@ namespace RustManager.Forms
             }
             
             var serverItem = new ServerModel(NameBox.Text, ipAddress.ToString(),
-                (int)ServerPort.Value, (int)RCONPort.Value, PasswordBox.Text, ConnectOnStartupCheck.Checked);
+                (int)ServerPort.Value, (int)RCONPort.Value, PasswordBox.Text, ConnectOnStartupCheck.Checked,
+                LegacyServer.Checked);
             var search = DataFileManager.Data.AllServers.Where(x => x.Name == serverItem.Name);
 
             if (search.Any())
@@ -81,24 +82,25 @@ namespace RustManager.Forms
         {
             var currentItem = ServerList.Text;
 
-            ServerModel item = null;
+            ServerModel model = null;
 
             if (!string.IsNullOrEmpty(currentItem))
             {
-                item = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
+                model = DataFileManager.Data.AllServers.FirstOrDefault(x => x.Name == currentItem);
             }
 
-            if (item == null)
+            if (model == null)
             {
-                item = new ServerModel();
+                model = new ServerModel();
             }
 
-            NameBox.Text = item.Name;
-            AddressBox.Text = item.Address;
-            ServerPort.Value = item.Port;
-            RCONPort.Value = item.RconPort;
-            PasswordBox.Text = item.Password;
-            ConnectOnStartupCheck.Checked = item.ConnectOnLoad;
+            NameBox.Text = model.Name;
+            AddressBox.Text = model.Address;
+            ServerPort.Value = model.Port;
+            RCONPort.Value = model.RconPort;
+            PasswordBox.Text = model.Password;
+            ConnectOnStartupCheck.Checked = model.ConnectOnLoad;
+            LegacyServer.Checked = model.LegacyServer;
         }
 
         private void DeleteButton_Click(object sender, EventArgs e)
@@ -138,6 +140,7 @@ namespace RustManager.Forms
             RCONPort.Value = 0;
             PasswordBox.Text = "";
             ConnectOnStartupCheck.Checked = false;
+            LegacyServer.Checked = false;
         }
     }
 }

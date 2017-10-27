@@ -32,6 +32,7 @@
             this.ServerList = new System.Windows.Forms.ComboBox();
             this.DeleteButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.LegacyServer = new System.Windows.Forms.CheckBox();
             this.NameBox = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.SaveButton = new System.Windows.Forms.Button();
@@ -72,6 +73,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.LegacyServer);
             this.groupBox1.Controls.Add(this.NameBox);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.SaveButton);
@@ -86,10 +88,20 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 70);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(187, 278);
+            this.groupBox1.Size = new System.Drawing.Size(187, 297);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
+            // 
+            // LegacyServer
+            // 
+            this.LegacyServer.AutoSize = true;
+            this.LegacyServer.Location = new System.Drawing.Point(7, 244);
+            this.LegacyServer.Name = "LegacyServer";
+            this.LegacyServer.Size = new System.Drawing.Size(95, 17);
+            this.LegacyServer.TabIndex = 11;
+            this.LegacyServer.Text = "Legacy Server";
+            this.LegacyServer.UseVisualStyleBackColor = true;
             // 
             // NameBox
             // 
@@ -109,7 +121,7 @@
             // 
             // SaveButton
             // 
-            this.SaveButton.Location = new System.Drawing.Point(7, 245);
+            this.SaveButton.Location = new System.Drawing.Point(6, 267);
             this.SaveButton.Name = "SaveButton";
             this.SaveButton.Size = new System.Drawing.Size(174, 23);
             this.SaveButton.TabIndex = 9;
@@ -186,10 +198,10 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Port";
             // 
-            // IPBox
+            // AddressBox
             // 
             this.AddressBox.Location = new System.Drawing.Point(7, 77);
-            this.AddressBox.Name = "IPBox";
+            this.AddressBox.Name = "AddressBox";
             this.AddressBox.Size = new System.Drawing.Size(174, 20);
             this.AddressBox.TabIndex = 4;
             // 
@@ -216,7 +228,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(212, 356);
+            this.ClientSize = new System.Drawing.Size(212, 380);
             this.Controls.Add(this.CreateButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.DeleteButton);
@@ -252,5 +264,6 @@
         private System.Windows.Forms.TextBox NameBox;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button CreateButton;
+        private System.Windows.Forms.CheckBox LegacyServer;
     }
 }
