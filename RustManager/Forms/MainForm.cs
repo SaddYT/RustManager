@@ -2,7 +2,6 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-
 using RustManager.Managers;
 using RustManager.ServerManagement;
 
@@ -26,10 +25,13 @@ namespace RustManager.Forms
         private void MainForm_Load(object sender, EventArgs e)
         {
             AssemblyManager.Initialize();
-            
+
             Managers.EventManager.RegisterEvents();
 
             RefreshServerList();
+
+            var page = TabManager.Instance.DefaultPage;
+            TabPanel.TabPages.Add(page);
 
             ServerManager.ConnectToAll(true);
         }
@@ -38,7 +40,7 @@ namespace RustManager.Forms
         {
             Manage.ShowForm();
         }
-        
+
         private void ConnectButton_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(ServerList.Text))
@@ -67,13 +69,11 @@ namespace RustManager.Forms
         private void TabPanel_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedIndex = TabPanel.SelectedIndex;
+            if (selectedIndex == -1) return;
             var page = TabPanel.TabPages[selectedIndex];
             var foundArray = page.Controls.Find("OutputBox", false);
 
-            if (foundArray.Count() == 0)
-            {
-                return;
-            }
+            if (foundArray.Count() == 0) return;
 
             var outputBox = foundArray[0] as TextBox;
 
@@ -88,27 +88,20 @@ namespace RustManager.Forms
 
         public void OutputText(string tabName, string text)
         {
-            var index = TabPanel.TabPages.IndexOfKey(tabName);
-            var page = TabPanel.TabPages[index];
+            var page = Tools.FindTabPage(TabPanel, tabName);
+            if (page == null) return;
             var foundArray = page.Controls.Find("OutputBox", false);
 
-            if (foundArray.Count() == 0)
-            {
-                return;
-            }
+            if (foundArray.Count() == 0) return;
 
             var outputBox = foundArray[0] as TextBox;
 
             if (outputBox.InvokeRequired)
             {
-                if (Instance.IsDisposed)
-                {
-                    return;
-                }
+                if (Instance.IsDisposed) return;
 
                 var callback = new OutputTextCallback(OutputText);
-                callback(tabName, text);
-
+                this.Invoke(callback, tabName, text);
                 return;
             }
 
@@ -119,10 +112,55 @@ namespace RustManager.Forms
             outputBox.AppendText($"{currentTime} | {text}\r\n");
         }
 
+        public void Disconnect(string tabName)
+        {
+            var page = Tools.FindTabPage(TabPanel, tabName);
+            if (page == null) return;
+
+            var connection = ServerManager.FindConnection(page);
+            if (connection == null) return;
+
+            ServerManager.Disconnect(connection);
+            TabPanel.TabPages.Remove(page);
+
+            if (TabPanel.TabPages.Count == 0)
+            {
+                var defaultPage = TabManager.Instance.DefaultPage;
+                TabPanel.TabPages.Add(defaultPage);
+            }
+        }
+
         public void RefreshServerList()
         {
             ServerList.DataSource = null;
             ServerList.DataSource = DataFileManager.Data.AllServers.Select(x => x.Name).ToList();
+        }
+
+        private void TabPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right && e.Button != MouseButtons.Middle) return;
+
+            for (int i = 0; i < TabPanel.TabPages.Count; i++)
+            {
+                if (TabPanel.GetTabRect(i).Contains(e.Location))
+                {
+                    var tab = TabPanel.TabPages[i];
+
+                    if (e.Button == MouseButtons.Right)
+                    {
+                        tab.ContextMenu = new ContextMenu();
+                        tab.ContextMenu.MenuItems.Add(new MenuItem("Disconnect", (s, evt) => Disconnect(tab.Name)));
+                        tab.ContextMenu.Show(TabPanel, e.Location);
+                        return;
+                    }
+
+                    if (e.Button == MouseButtons.Middle)
+                    {
+                        Disconnect(tab.Name);
+                        return;
+                    }
+                }
+            }
         }
     }
 }
