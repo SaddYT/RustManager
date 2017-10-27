@@ -36,7 +36,7 @@ namespace RustManager.Managers
             _defaultPage.Controls.Add(sayBox);
             _defaultPage.Controls.Add(commandBox);
             _defaultPage.Location = new System.Drawing.Point(4, 22);
-            _defaultPage.Name = "tabPage1";
+            _defaultPage.Name = "NoConnectionPage";
             _defaultPage.Padding = new Padding(3);
             _defaultPage.Size = new System.Drawing.Size(508, 369);
             _defaultPage.TabIndex = 0;
