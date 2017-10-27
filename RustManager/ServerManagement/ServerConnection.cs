@@ -9,22 +9,46 @@ namespace RustManager.ServerManagement
         public ServerModel ServerInfo;
         public TabManager Tab;
         public TabPage Page;
-        public RconConnection RconInstance;
+        public SourceRconConnection RconInstance;
+        public WebSocketConnection WebSocketInstance;
 
         public ServerConnection(ServerModel model, TabManager tab, TabPage page)
         {
             ServerInfo = model;
             Tab = tab;
             Page = page;
-            RconInstance = new RconConnection(model.Address, model.RconPort, model.Password, (message) => OnMessage(message));
         }
 
-        public void Connect() => RconInstance.Connect();
+        public void Connect()
+        {
+            if (ServerInfo.LegacyServer)
+            {
+                if (RconInstance == null)
+                {
+                    RconInstance = new SourceRconConnection(ServerInfo.Address, ServerInfo.RconPort, ServerInfo.Password, message => OnMessage(message));
+                }
 
-        public void Disconnect() => RconInstance.Disconnect();
+                RconInstance.Connect();
+                return;
+            }
+
+            WebSocketInstance = new WebSocketConnection(ServerInfo.Address, ServerInfo.RconPort, ServerInfo.Password, message => OnMessage(message));
+            WebSocketInstance.Connect();
+        }
+
+        public void Disconnect()
+        {
+            if (ServerInfo.LegacyServer)
+            {
+                RconInstance?.Disconnect();
+                return;
+            }
+
+            WebSocketInstance?.Disconnect();
+        }
 
         public void OnMessage(string output) => MainForm.Instance.OutputText(ServerInfo.Name, output);
-        
+
         internal void OnCommandBoxKey(object sender, KeyEventArgs e)
         {
             var textbox = sender as TextBox;
@@ -34,7 +58,7 @@ namespace RustManager.ServerManagement
                 return;
             }
 
-            RconInstance.SendCommand(textbox.Text);
+            SendCommand(textbox.Text);
             textbox.Text = "";
         }
 
@@ -47,8 +71,19 @@ namespace RustManager.ServerManagement
                 return;
             }
 
-            RconInstance.SendCommand($"global.say \"{textbox.Text}\"");
+            SendCommand($"global.say \"{textbox.Text}\"");
             textbox.Text = "";
-        }     
+        }
+
+        private void SendCommand(string command)
+        {
+            if (ServerInfo.LegacyServer)
+            {
+                RconInstance.SendCommand(command);
+                return;
+            }
+
+            WebSocketInstance.SendCommand(command);
+        }
     }
 }
