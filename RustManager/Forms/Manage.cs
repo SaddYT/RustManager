@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
@@ -43,8 +43,8 @@ namespace RustManager.Forms
                 MessageBox.Show("You must enter a server name.");
                 return;
             }
-
-            if (string.IsNullOrEmpty(AddressBox.Text) || !IPAddress.TryParse(AddressBox.Text, out IPAddress ipAddress))
+            IPAddress ipAddress;
+            if (string.IsNullOrEmpty(AddressBox.Text) || IPAddress.TryParse(AddressBox.Text, out ipAddress))
             {
                 MessageBox.Show("You must enter a (valid) IP address.");
                 return;
